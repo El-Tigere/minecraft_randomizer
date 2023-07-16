@@ -16,6 +16,10 @@ config.randomize.forEach(f => {
 });
 console.log('Finished ranomizing!');
 
+function getFileContent(relativeFile) {
+    return JSON.parse(fs.readFileSync(config.inputPath + relativeFile));
+}
+
 function deepShuffleDirectory(relativeDir) {
     let fileArr = getFilePaths(relativeDir);
     randomizeFiles(fileArr);
