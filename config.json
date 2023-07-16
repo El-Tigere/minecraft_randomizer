@@ -1,0 +1,7 @@
+{
+    "inputPath": "./input pack",
+    "outputPath": "./output pack",
+    "randomize": [
+        "lootTables"
+    ]
+}
