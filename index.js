@@ -25,7 +25,14 @@ console.log('Finished ranomizing!');
 
 function deepShuffleDirectory(relativeDir, jsonProcessor) {
     let fileArr = getFilePaths(relativeDir);
-    randomizeFiles(fileArr, jsonProcessor);
+    
+    let shuffledFiles = shuffle(fileArr);
+    
+    for(let i = 0; i < fileArr.length; i++)
+    {
+        copyFile(fileArr[i], shuffledFiles[i], jsonProcessor);
+    }
+    
     return fileArr.length;
 }
 
@@ -44,15 +51,6 @@ function getFilePaths(relativeDir) {
     }
     
     return paths;
-}
-
-function randomizeFiles(fileArr, jsonProcessor) {
-    let shuffledFiles = shuffle(fileArr);
-    
-    for(let i = 0; i < fileArr.length; i++)
-    {
-        copyFile(fileArr[i], shuffledFiles[i], jsonProcessor);
-    }
 }
 
 function copyFile(src, dest, jsonProcessor) {
