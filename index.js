@@ -3,7 +3,7 @@ const fs = require('fs');
 const config = JSON.parse(fs.readFileSync('./config.json'));
 
 const features = {
-    "lootTables": () => deepShuffleDirectory('/data/minecraft/loot_tables', (j) => {
+    "lootTables": () => shuffleFiles('/data/minecraft/loot_tables', (j) => {
         if(j.pools) {
             j.pools.forEach((e) => {
                 if(e.conditions) delete e.conditions
@@ -23,13 +23,12 @@ config.randomize.forEach(f => {
 });
 console.log('Finished ranomizing!');
 
-function deepShuffleDirectory(relativeDir, jsonProcessor) {
+function shuffleFiles(relativeDir, jsonProcessor) {
     let fileArr = getFilePaths(relativeDir);
     
     let shuffledFiles = shuffle(fileArr);
     
-    for(let i = 0; i < fileArr.length; i++)
-    {
+    for(let i = 0; i < fileArr.length; i++) {
         copyFile(fileArr[i], shuffledFiles[i], jsonProcessor);
     }
     
@@ -71,8 +70,7 @@ function shuffle(arr) {
     let len = shuffled.length;
     if(len <= 1) return shuffled;
     
-    for(let i = 0; i < len - 1; i++)
-    {
+    for(let i = 0; i < len - 1; i++) {
         swap(shuffled, i, i + ((Math.random() * (len - i)) >> 0));
     }
     
