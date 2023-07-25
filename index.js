@@ -6,7 +6,7 @@ const features = {
     "lootTables": () => shuffleFiles('/data/minecraft/loot_tables', (j) => {
         if(j.pools) {
             j.pools.forEach((e) => {
-                if(e.conditions) delete e.conditions
+                if(e.conditions) delete e.conditions;
             });
         }
         return j;
@@ -35,6 +35,32 @@ function shuffleFiles(relativeDir, jsonProcessor) {
     return fileArr.length;
 }
 
+function shuffleProperties(relativeDir, jsonGetter, jsonSetter) {
+    let fileArr = getFilePaths(relativeDir);
+    
+    // get properties (if the jsonGetter returns undefined nothing is added to the array)
+    let propertyArr = [];
+    for(let i = 0; i < fileArr.length; i++) {
+        let fileContent = fs.readFileSync(config.inputPath + fileArr[i]);
+        let property = jsonGetter(fileContent);
+        if(property) propertyArr.push(property);
+    }
+    
+    let shuffledPropertyArr = shuffle(propertyArr);
+    
+    // write files with changed property
+    for(let i = 0; i < fileArr.length; i++) {
+        let fileContent = fs.readFileSync(config.inputPath + fileArr[i]);
+        if(jsonGetter(fileContent)) {
+            createDirForFile(fileArr[i]);
+            
+            let jsonContent = JSON.parse(fileContent);
+            jsonSetter(jsonContent, shuffledPropertyArr.pop());
+            fs.writeFileSync(config.outputPath + fileArr[i], JSON.stringify(jsonContent));
+        }
+    }
+}
+
 function getFilePaths(relativeDir) {
     let paths = [];
     getSubFilePaths(relativeDir);
@@ -53,8 +79,7 @@ function getFilePaths(relativeDir) {
 }
 
 function copyFile(src, dest, jsonProcessor) {
-    let dir = dest.match(/.+\//)[0];
-    if(!fs.existsSync(config.outputPath + dir)) fs.mkdirSync(config.outputPath + dir, {recursive: true});
+    createDirForFile(dest);
     
     if(jsonProcessor) {
         let jsonContent = JSON.parse(fs.readFileSync(config.inputPath + src));
@@ -63,6 +88,11 @@ function copyFile(src, dest, jsonProcessor) {
     } else {
         fs.copyFileSync(config.inputPath + src, config.outputPath + dest);
     }
+}
+
+function createDirForFile(dest) {
+    let dir = dest.match(/.+\//)[0];
+    if(!fs.existsSync(config.outputPath + dir)) fs.mkdirSync(config.outputPath + dir, {recursive: true});
 }
 
 function shuffle(arr) {
