@@ -2,6 +2,7 @@
     "inputPath": "./input pack",
     "outputPath": "./output pack",
     "randomize": [
-        "lootTables"
+        "lootTables",
+        "recipes"
     ]
 }
