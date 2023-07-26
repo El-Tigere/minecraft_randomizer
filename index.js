@@ -3,14 +3,15 @@ const fs = require('fs');
 const config = JSON.parse(fs.readFileSync('./config.json'));
 
 const features = {
-    "lootTables": () => shuffleFiles('/data/minecraft/loot_tables', (j) => {
+    'lootTables': () => shuffleFiles('/data/minecraft/loot_tables', (j) => {
         if(j.pools) {
             j.pools.forEach((e) => {
                 if(e.conditions) delete e.conditions;
             });
         }
         return j;
-    })
+    }),
+    'recipes': () => shuffleProperties('/data/minecraft/recipes', (j) => j.result, (j, v) => j.result = v)
 };
 
 config.randomize.forEach(f => {
