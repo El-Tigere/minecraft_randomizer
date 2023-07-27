@@ -11,7 +11,7 @@ const features = {
         }
         return j;
     }),
-    'recipes': () => shuffleProperties('/data/minecraft/recipes', (j) => j.result, (j, v) => j.result = v)
+    'recipes': () => shuffleProperties('/data/minecraft/recipes', (j, n) => j[n], (j, n, v) => j[n] = v, ['result'])
 };
 
 config.randomize.forEach(f => {
@@ -36,30 +36,45 @@ function shuffleFiles(relativeDir, jsonProcessor) {
     return fileArr.length;
 }
 
-function shuffleProperties(relativeDir, jsonGetter, jsonSetter) {
+function shuffleProperties(relativeDir, jsonGetter, jsonSetter, nameArr) {
     let fileArr = getFilePaths(relativeDir);
-    let randomizedCount = fileArr.length;
+    
+    let propertyArrs = [];
+    nameArr.forEach((e) => propertyArrs.push([]));
     
     // get properties (if the jsonGetter returns undefined nothing is added to the array)
-    let propertyArr = [];
-    for(let i = 0; i < fileArr.length; i++) {
-        let fileContent = fs.readFileSync(config.inputPath + fileArr[i]);
-        let jsonContent = JSON.parse(fileContent);
-        let property = jsonGetter(jsonContent);
-        if(property) propertyArr.push(property);
-    }
-    
-    let shuffledPropertyArr = shuffle(propertyArr);
-    
-    // write files with changed property
     for(let i = 0; i < fileArr.length; i++) {
         let fileContent = fs.readFileSync(config.inputPath + fileArr[i]);
         let jsonContent = JSON.parse(fileContent);
         
-        if(jsonGetter(jsonContent)) {
+        for(let j = 0; j < nameArr.length; j++) {
+            let property = jsonGetter(jsonContent, nameArr[j]);
+            if(property) propertyArrs[j].push(property);
+        }
+    }
+    
+    // randomize
+    for(let i = 0; i < propertyArrs.length; i++) {
+        propertyArrs[i] = shuffle(propertyArrs[i]);
+    }
+    
+    // write files with changed property
+    let randomizedCount = 0;
+    for(let i = 0; i < fileArr.length; i++) {
+        let fileContent = fs.readFileSync(config.inputPath + fileArr[i]);
+        let jsonContent = JSON.parse(fileContent);
+        
+        let changed = false;
+        for(let j = 0; j < nameArr.length; j++) {
+            if(jsonGetter(jsonContent, nameArr[j])) {
+                changed = true;
+                jsonSetter(jsonContent, nameArr[j], propertyArrs[j].pop());
+            }
+        }
+        
+        if(changed) {
+            randomizedCount++;
             createDirForFile(fileArr[i]);
-            
-            jsonSetter(jsonContent, shuffledPropertyArr.pop());
             fs.writeFileSync(config.outputPath + fileArr[i], JSON.stringify(jsonContent));
         }
     }
