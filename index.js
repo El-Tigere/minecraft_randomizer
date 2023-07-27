@@ -3,15 +3,29 @@ const fs = require('fs');
 const config = JSON.parse(fs.readFileSync('./config.json'));
 
 const features = {
-    'lootTables': () => shuffleFiles('/data/minecraft/loot_tables', (j) => {
-        if(j.pools) {
-            j.pools.forEach((e) => {
-                if(e.conditions) delete e.conditions;
-            });
+    'lootTables': () => shuffleFiles(
+        '/data/minecraft/loot_tables',
+        (j) => {
+            if(j.pools) {
+                j.pools.forEach((e) => {
+                    if(e.conditions) delete e.conditions;
+                });
+            }
+            return j;
         }
-        return j;
-    }),
-    'recipes': () => shuffleProperties('/data/minecraft/recipes', (j, n) => j[n], (j, n, v) => j[n] = v, ['result'])
+    ),
+    
+    'recipes': () => shuffleProperties(
+        '/data/minecraft/recipes',
+        (j, n) => j[n], (j, n, v) => j[n] = v,
+        ['result']
+    ),
+    
+    'dimensionTypes': () => shuffleProperties(
+        '/data/minecraft/dimension_type',
+        (j, n) => j[n], (j, n, v) => j[n] = v,
+        Object.keys(getJsonContent('/data/minecraft/dimension_type/overworld.json'))
+    )
 };
 
 config.randomize.forEach(f => {
