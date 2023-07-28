@@ -21,7 +21,7 @@ const features = {
         ['result']
     ),
     
-    'dimensionTypes': () => shuffleProperties(
+    'dimensionTypes': () => shuffleProperties( // TODO: randomized dimension types don't work in minecraft for some reason
         '/data/minecraft/dimension_type',
         (j, n) => j[n], (j, n, v) => j[n] = v,
         Object.keys(getJsonContent('/data/minecraft/dimension_type/overworld.json'))
@@ -37,6 +37,15 @@ config.randomize.forEach(f => {
     }
 });
 console.log('Finished ranomizing!');
+
+function forEachFolder(relativeDir, callback) {
+    let folders = fs.readdirSync(config.inputPath + relativeDir);
+    folders.forEach((f) => {
+        if(fs.statSync(config.inputPath + relativeDir + '/' + f).isDirectory()) {
+            callback(relativeDir + '/' + f);
+        }
+    });
+}
 
 function shuffleFiles(relativeDir, jsonProcessor) {
     let fileArr = getFilePaths(relativeDir);
