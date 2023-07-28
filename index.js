@@ -25,7 +25,9 @@ const features = {
         '/data/minecraft/dimension_type',
         (j, n) => j[n], (j, n, v) => j[n] = v,
         Object.keys(getJsonContent('/data/minecraft/dimension_type/overworld.json'))
-    )
+    ),
+    
+    'tags': () => forEachFolder('/data/minecraft/tags', (folder) => shuffleFiles(folder))
 };
 
 config.randomize.forEach(f => {
