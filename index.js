@@ -40,11 +40,13 @@ console.log('Finished ranomizing!');
 
 function forEachFolder(relativeDir, callback) {
     let folders = fs.readdirSync(config.inputPath + relativeDir);
+    let randomizedCount = 0;
     folders.forEach((f) => {
         if(fs.statSync(config.inputPath + relativeDir + '/' + f).isDirectory()) {
-            callback(relativeDir + '/' + f);
+            randomizedCount += callback(relativeDir + '/' + f);
         }
     });
+    return randomizedCount;
 }
 
 function shuffleFiles(relativeDir, jsonProcessor) {
