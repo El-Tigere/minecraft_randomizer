@@ -27,7 +27,15 @@ const features = {
         Object.keys(getJsonContent('/data/minecraft/dimension_type/overworld.json'))
     ),
     
-    'tags': () => forEachFolder('/data/minecraft/tags', (folder) => shuffleFiles(folder))
+    'tags': () => forEachFolder(
+        '/data/minecraft/tags',
+        (folder) => shuffleProperties(
+            folder,
+            (j, n) => j[n].filter((e) => e[0] != '#'), // get all tag entries that don't reference other tags (the ones not starting with #)
+            (j, n, v) => j[n] = j[n].filter((e) => e[0] == '#').concat(v), // keep entries referencing tags from the original file and add the randomized non-tag-entries
+            ['values']
+        )
+    )
 };
 
 config.randomize.forEach(f => {
