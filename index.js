@@ -3,6 +3,7 @@ const fs = require('fs');
 const config = JSON.parse(fs.readFileSync('./config.json'));
 
 const features = {
+    // data
     'lootTables': () => shuffleFiles(
         '/data/minecraft/loot_tables',
         (j) => {
@@ -17,13 +18,15 @@ const features = {
     
     'recipes': () => shuffleProperties(
         '/data/minecraft/recipes',
-        (j, n) => j[n], (j, n, v) => j[n] = v,
+        (j, n) => j[n],
+        (j, n, v) => j[n] = v,
         ['result']
     ),
     
     'dimensionTypes': () => shuffleProperties( // TODO: randomized dimension types don't work in minecraft for some reason
         '/data/minecraft/dimension_type',
-        (j, n) => j[n], (j, n, v) => j[n] = v,
+        (j, n) => j[n],
+        (j, n, v) => j[n] = v,
         Object.keys(getJsonContent('/data/minecraft/dimension_type/overworld.json'))
     ),
     
@@ -36,6 +39,8 @@ const features = {
             ['values']
         )
     )
+    
+    // assets
 };
 
 config.randomize.forEach(f => {
