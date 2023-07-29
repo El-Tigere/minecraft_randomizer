@@ -3,6 +3,7 @@
     "outputPath": "./output pack",
     "randomize": [
         "lootTables",
-        "recipes"
+        "recipes",
+        "tags"
     ]
 }
