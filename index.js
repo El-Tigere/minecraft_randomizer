@@ -38,9 +38,20 @@ const features = {
             (j, n, v) => j[n] = j[n].filter((e) => e[0] == '#').concat(v), // keep entries referencing tags from the original file and add the randomized non-tag-entries
             ['values']
         )
-    )
+    ),
     
     // assets
+    'blockStates': () => crossShuffleProperties(
+        '/assets/minecraft/blockstates',
+        (j) => {
+            if(j.variants) return Object.values(j.variants); // get all blockstate variants
+            else return [...j.multipart].map((e) => e.apply); // get all parts of the multipart
+        },
+        (j, v) => {
+            if(j.variants) Object.keys(j.variants).forEach((k) => j.variants[k] = v.pop()); // set all blockstate variants to the next value in the list
+            else j.multipart.forEach((k) => k.apply = v.pop()); // set all parts of the multipart to the next value in the list
+        }
+    )
 };
 
 config.randomize.forEach(f => {
@@ -83,7 +94,7 @@ function crossShuffleProperties(relativeDir, jsonMultiGetter, jsonMultiSetter) {
     // get properties
     for(let i = 0; i < fileArr.length; i++) {
         let jsonContent = getJsonContent(fileArr[i]);
-        propertyArr.concat(jsonMultiGetter(jsonContent));
+        propertyArr = propertyArr.concat(jsonMultiGetter(jsonContent));
     }
     
     // randomize
@@ -100,7 +111,6 @@ function crossShuffleProperties(relativeDir, jsonMultiGetter, jsonMultiSetter) {
     
     return fileArr.length;
 }
-
 
 function shuffleProperties(relativeDir, jsonGetter, jsonSetter, nameArr) {
     let fileArr = getFilePaths(relativeDir);
