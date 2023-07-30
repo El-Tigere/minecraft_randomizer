@@ -76,6 +76,32 @@ function shuffleFiles(relativeDir, jsonProcessor) {
     return fileArr.length;
 }
 
+function crossShuffleProperties(relativeDir, jsonMultiGetter, jsonMultiSetter) {
+    let fileArr = getFilePaths(relativeDir);
+    let propertyArr = [];
+    
+    // get properties
+    for(let i = 0; i < fileArr.length; i++) {
+        let jsonContent = getJsonContent(fileArr[i]);
+        propertyArr.concat(jsonMultiGetter(jsonContent));
+    }
+    
+    // randomize
+    propertyArr = shuffle(propertyArr);
+    
+    // write files with changed properties
+    for(let i = 0; i < fileArr.length; i++) {
+        let jsonContent = getJsonContent(fileArr[i]); // TODO: file is read twice (inefficient)
+        
+        jsonMultiSetter(jsonContent, propertyArr);
+        
+        writeJsonContent(fileArr[i], jsonContent);
+    }
+    
+    return fileArr.length;
+}
+
+
 function shuffleProperties(relativeDir, jsonGetter, jsonSetter, nameArr) {
     let fileArr = getFilePaths(relativeDir);
     
