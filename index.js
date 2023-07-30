@@ -97,7 +97,7 @@ function shuffleProperties(relativeDir, jsonGetter, jsonSetter, nameArr) {
         propertyArrs[i] = shuffle(propertyArrs[i]);
     }
     
-    // write files with changed property
+    // write files with changed properties
     let randomizedCount = 0;
     for(let i = 0; i < fileArr.length; i++) {
         let jsonContent = getJsonContent(fileArr[i]); // TODO: file is read twice (inefficient)
@@ -112,8 +112,7 @@ function shuffleProperties(relativeDir, jsonGetter, jsonSetter, nameArr) {
         
         if(changed) {
             randomizedCount++;
-            createDirForFile(fileArr[i]);
-            fs.writeFileSync(config.outputPath + fileArr[i], JSON.stringify(jsonContent));
+            writeJsonContent(fileArr[i], jsonContent);
         }
     }
     return randomizedCount;
@@ -122,6 +121,11 @@ function shuffleProperties(relativeDir, jsonGetter, jsonSetter, nameArr) {
 function getJsonContent(relativeFile) {
     let fileContent = fs.readFileSync(config.inputPath + relativeFile);
     return JSON.parse(fileContent);
+}
+
+function writeJsonContent(relativeFile, jsonContent) {
+    createDirForFile(relativeFile);
+    fs.writeFileSync(config.outputPath + relativeFile, JSON.stringify(jsonContent));
 }
 
 function getFilePaths(relativeDir) {
