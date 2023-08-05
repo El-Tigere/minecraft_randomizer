@@ -75,6 +75,27 @@ function forEachFolder(relativeDir, callback) {
     return randomizedCount;
 }
 
+function shuffleTextures(relativeDir) {
+    let fileArr = getFilePaths(relativeDir);
+    
+    let shuffledFiles = shuffle(fileArr);
+    
+    for(let i = 0, j = 0; i < fileArr.length && j < fileArr.length; i++, j++) {
+        // go to the next image file in the shuffled array
+        while(shuffledFiles[j].endsWith('.mcmeta')) j++;
+        
+        // copy texture
+        copyFile(fileArr[i], shuffledFiles[j]);
+        
+        // if the texture is animated, copy mcmeta file
+        if(i < fileArr.length - 1 && fileArr[i + 1] == fileArr[i] + '.mcmeta') {
+            copyFile(fileArr[i + 1], shuffledFiles[j] + '.mcmeta');
+            i++;
+        }
+    }
+    
+}
+
 function shuffleFiles(relativeDir, jsonProcessor) {
     let fileArr = getFilePaths(relativeDir);
     
