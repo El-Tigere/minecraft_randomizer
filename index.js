@@ -51,7 +51,8 @@ const features = {
             if(j.variants) Object.keys(j.variants).forEach((k) => j.variants[k] = v.pop()); // set all blockstate variants to the next value in the list
             else j.multipart.forEach((k) => k.apply = v.pop()); // set all parts of the multipart to the next value in the list
         }
-    )
+    ),
+    'blockTextures': () => shuffleTextures('/assets/minecraft/textures/block')
 };
 
 config.randomize.forEach(f => {
