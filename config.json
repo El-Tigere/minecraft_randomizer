@@ -4,6 +4,7 @@
     "randomize": [
         "lootTables",
         "recipes",
-        "tags"
+        "tags",
+        "blockStates"
     ]
 }
