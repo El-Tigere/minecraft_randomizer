@@ -52,7 +52,8 @@ const features = {
             else j.multipart.forEach((k) => k.apply = v.pop()); // set all parts of the multipart to the next value in the list
         }
     ),
-    'blockTextures': () => shuffleTextures('/assets/minecraft/textures/block')
+    'blockTextures': () => shuffleTextures('/assets/minecraft/textures/block'),
+    'entityTextures': () => forEachFolder('/assets/minecraft/textures/entity', (folder) => shuffleTextures(folder))
 };
 
 config.randomize.forEach(f => {
