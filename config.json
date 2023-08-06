@@ -5,6 +5,7 @@
         "lootTables",
         "recipes",
         "tags",
-        "blockStates"
+        "blockStates",
+        "blockTextures"
     ]
 }
