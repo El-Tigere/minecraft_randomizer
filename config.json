@@ -6,6 +6,7 @@
         "recipes",
         "tags",
         "blockStates",
-        "blockTextures"
+        "blockTextures",
+        "entityTextures"
     ]
 }
