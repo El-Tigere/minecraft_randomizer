@@ -54,7 +54,8 @@ const features = {
     ),
     'blockTextures': () => shuffleTextures('/assets/minecraft/textures/block'),
     'entityTextures': () => forEachFolder('/assets/minecraft/textures/entity', (folder) => shuffleTextures(folder)),
-    'itemTextures': () => shuffleTextures('/assets/minecraft/textures/item')
+    'itemTextures': () => shuffleTextures('/assets/minecraft/textures/item'),
+    'effectTextures': () => shuffleTextures('/assets/minecraft/textures/mob_effect')
 };
 
 config.randomize.forEach(f => {
