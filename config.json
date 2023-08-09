@@ -8,6 +8,7 @@
         "blockStates",
         "blockTextures",
         "entityTextures",
-        "itemTextures"
+        "itemTextures",
+        "effectTextures"
     ]
 }
