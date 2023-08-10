@@ -10,6 +10,7 @@
         "entityTextures",
         "itemTextures",
         "effectTextures",
-        "paintingTextures"
+        "paintingTextures",
+        "particleTextures"
     ]
 }
