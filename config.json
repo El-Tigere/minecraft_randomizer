@@ -9,6 +9,7 @@
         "blockTextures",
         "entityTextures",
         "itemTextures",
-        "effectTextures"
+        "effectTextures",
+        "paintingTextures"
     ]
 }
