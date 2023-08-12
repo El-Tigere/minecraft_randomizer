@@ -246,21 +246,3 @@ function swap(arr, a, b) {
     arr[a] = arr[b];
     arr[b] = t;
 }
-
-// function arreq(arr1, arr2) {
-//     if(arr1.length != arr2.length) return false;
-//     for(let i = 0; i < arr1.length; i++) {
-//         if(arr1[i] != arr2[i]) return false;
-//     }
-//     return true;
-// }
-// function testDistribution() {
-//     let a = {};
-//     for(let i = 0; i < 42000; i++) {
-//         let x = shuffle('abc').join('');
-//         if(a[x]) a[x]++;
-//         else a[x] = 1;
-//     }
-//     console.log(a);
-// }
-// testDistribution();
