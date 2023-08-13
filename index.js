@@ -1,4 +1,5 @@
 const fs = require('fs');
+const sharp = require('sharp');
 
 const config = JSON.parse(fs.readFileSync('./config.json'));
 
@@ -80,6 +81,57 @@ function forEachFolder(relativeDir, callback) {
         }
     });
     return randomizedCount;
+}
+
+async function shuffleTextureParts(relativeFile, sizeX, sizeY, countX, countY) {
+    
+    // seperate image into parts
+    let image = await sharp(config.inputPath + relativeFile).toBuffer().catch((reason) => {
+        console.log(`Image could not be loaded. reason: ${reason}`);
+    });
+    let parts = [];
+    for(let i = 0; i < countY; i++) {
+        for(let j = 0; j < countX; j++) {
+            parts.push(await sharp(image)
+                .extract({left: sizeX * j, top: sizeY * i, width: sizeX, height: sizeY})
+                .toBuffer()
+                .catch((reason) => {
+                    console.log(`Image could not be extracted. reason: ${reason}`);
+                })
+            );
+        }
+    }
+    
+    // shuffle parts
+    parts = shuffle(parts);
+    
+    // merge parts into output
+    let output = sharp({
+        create: {
+            width: 16,
+            height: 16,
+            channels: 4,
+            background: {r: 0, g: 0, b: 0, alpha: 0}
+        }
+    });
+    for(let i = 0; i < countY; i++) {
+        for(let j = 0; j < countX; j++) {
+            let index = i * countX + j;
+            parts[index] = {
+                input: parts[index],
+                left: sizeX * j,
+                top: sizeY * i
+            }
+        }
+    }
+    output = output.composite(parts);
+    
+    // write output to file
+    createDirForFile(relativeFile);
+    output.toFile(config.outputPath + relativeFile, (err, info) => {
+        if(err) throw err;
+    });
+    return 1; // 1 file was randomized
 }
 
 function shuffleTextures(relativeDir) {
