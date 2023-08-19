@@ -108,8 +108,8 @@ async function shuffleTextureParts(relativeFile, sizeX, sizeY, countX, countY) {
     // merge parts into output
     let output = sharp({
         create: {
-            width: 16,
-            height: 16,
+            width: sizeX * countX,
+            height: sizeY * countY,
             channels: 4,
             background: {r: 0, g: 0, b: 0, alpha: 0}
         }
